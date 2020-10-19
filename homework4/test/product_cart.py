@@ -18,7 +18,7 @@ def test_wish_list(web_driver, page_url):
     wd.get(page_url + url_category)
     wd.find_element_by_css_selector("#content > div > div.col-sm-4 > div.btn-group > button:nth-child(1)").click()
     wish = wd.find_element_by_css_selector("#wishlist-total > span")
-    assert wish.text == "Wish List (1)"
+    assert "Wish List (1)" in wish.text
 
 
 def test_add_cart(web_driver, page_url):

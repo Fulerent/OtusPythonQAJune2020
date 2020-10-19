@@ -27,7 +27,6 @@ def web_driver(request):
         options.headless = True
         options.add_argument('start-fullscreen')
         browser = webdriver.Firefox(firefox_options=options)
-
     yield browser
     browser.quit()
 
