@@ -22,13 +22,24 @@ def web_driver(request):
         options.headless = True
         options.add_argument('start-fullscreen')
         browser = webdriver.Chrome(chrome_options=options)
+
     elif browser == "firefox":
         options = webdriver.FirefoxOptions()
         options.headless = True
         options.add_argument('start-fullscreen')
         browser = webdriver.Firefox(firefox_options=options)
+    else:
+        raise Exception("Такой браузер не поддерижвается")
+
     yield browser
     browser.quit()
+
+
+@pytest.fixture
+def wd(web_driver):
+    wd = web_driver
+    return wd
+
 
 
 

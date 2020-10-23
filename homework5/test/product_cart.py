@@ -5,24 +5,21 @@ import time
 url_category = "/macbook"
 
 
-def test_h1(web_driver, page_url):
-    wd = web_driver
+def test_h1(page_url, wd):
     wd.get(page_url + url_category)
     h1 = wd.find_element_by_css_selector("#content > div > div.col-sm-4 > h1")
     print(h1.text)
     assert h1.text == "MacBook"
 
 
-def test_wish_list(web_driver, page_url):
-    wd = web_driver
+def test_wish_list(web_driver, page_url, wd):
     wd.get(page_url + url_category)
     wd.find_element_by_css_selector("#content > div > div.col-sm-4 > div.btn-group > button:nth-child(1)").click()
     wish = wd.find_element_by_css_selector("#wishlist-total > span")
     assert "Wish List (1)" in wish.text
 
 
-def test_add_cart(web_driver, page_url):
-    wd = web_driver
+def test_add_cart(web_driver, page_url, wd):
     wd.get(page_url + url_category)
     price = wd.find_element_by_css_selector("#content > div > div.col-sm-4 > ul:nth-child(4) > li:nth-child(1) > h2")
     wd.find_element_by_id("button-cart").click()

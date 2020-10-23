@@ -1,5 +1,4 @@
 import pytest
-import time
 
 
 def test_slider_link(web_driver, page_url):
@@ -35,7 +34,7 @@ def test_button_cart(web_driver, page_url):
     assert notification.text == "Your shopping cart is empty!"
 
 
-@pytest.mark.parametrize("currency_and_url", [('#form-currency > div > ul > li:nth-child(1) > button', '392.30€', '#content > div.row > div:nth-child(1) > div > div.caption > p.price > span'),
+@pytest.mark.parametrize("currency_and_url", [('"//button[text()="€ Euro"]', '392.30€', '#content > div.row > div:nth-child(1) > div > div.caption > p.price > span'),
                                       ('#form-currency > div > ul > li:nth-child(2) > button', '£61.86', '#content > div.row > div:nth-child(2) > div > div.caption > p.price > span'),
                                       ('#form-currency > div > ul > li:nth-child(3) > button', '$90.00', '#content > div.row > div:nth-child(3) > div > div.caption > p.price > span.price-tax')])
 def test_money(currency_and_url, web_driver, page_url):
@@ -48,3 +47,4 @@ def test_money(currency_and_url, web_driver, page_url):
     assert currency_and_url[1] == price.text
 
 
+$x("//span[@class='price-tax'and text()='Ex Tax: £306.25']")
