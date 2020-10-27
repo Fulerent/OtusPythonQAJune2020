@@ -1,50 +1,52 @@
 import pytest
+import time
+import selenium
+from homework5.page_object.MainPage import MainPage
+from homework5.page_object.common.ShopCart import ShopCart
+from homework5.page_object.common.Search import Search
 
 
-def test_slider_link(web_driver, page_url):
-    wd = web_driver
-    wd.get(page_url)
-    wd.find_element_by_id("slideshow0").click()
-    h1 = wd.find_element_by_xpath('//*[@id="content"]/div/div[2]/h1')
-    assert h1.text == "Samsung Galaxy Tab 10.1"
+def test_slider_link(browser):
+    h1_product = MainPage(browser)\
+        .click(MainPage.SLIDESHOW)\
+        .get_element_text(MainPage.NAME_PRODUCT)
+    assert h1_product == "Samsung Galaxy Tab 10.1"
 
 
-def test_count_product(web_driver, page_url):
-    wd = web_driver
-    wd.get(page_url)
-    list_notebook = wd.find_elements_by_class_name("product-layout")
-    assert len(list_notebook) == 4
+def test_count_product(browser):
+    count_featured = MainPage(browser)\
+        .count_featured_products(MainPage.FEATURED_PRODUCTS)
+    assert count_featured == 4
 
 
 @pytest.mark.parametrize("input_test_search", ('mac', 'Mac', 'MAC'))
-def test_search(input_test_search, web_driver, page_url):
-    wd = web_driver
-    wd.get(page_url)
-    wd.find_element_by_xpath('//*[@id="search"]/input').send_keys(input_test_search)
-    wd.find_element_by_css_selector("#search > span").click()
-    h1 = wd.find_element_by_css_selector("#content > h1")
-    assert h1.text == f"Search - {input_test_search}"
+def test_search(browser, input_test_search):
+    result_search = MainPage(browser)\
+        .input_search(MainPage.INPUT_SEARCH, input_test_search)\
+        .click(Search.BUTTON_SEARCH)\
+        .get_element_text(Search.RESULT_SEARCH)
+    assert result_search == f"Search - {input_test_search}"
 
 
-def test_button_cart(web_driver, page_url):
-    wd = web_driver
-    wd.get(page_url)
-    wd.find_element_by_css_selector("#cart > button").click()
-    notification = wd.find_element_by_css_selector("#cart > ul > li > p")
-    assert notification.text == "Your shopping cart is empty!"
+def test_button_cart(browser):
+    notification = MainPage(browser)\
+        .click(ShopCart.CART_BUTTON)\
+        .get_element_text(ShopCart.CART_DROP_NOTIFICATION)
+    assert notification == "Your shopping cart is empty!"
 
 
-@pytest.mark.parametrize("currency_and_url", [('"//button[text()="€ Euro"]', '392.30€', '#content > div.row > div:nth-child(1) > div > div.caption > p.price > span'),
-                                      ('#form-currency > div > ul > li:nth-child(2) > button', '£61.86', '#content > div.row > div:nth-child(2) > div > div.caption > p.price > span'),
-                                      ('#form-currency > div > ul > li:nth-child(3) > button', '$90.00', '#content > div.row > div:nth-child(3) > div > div.caption > p.price > span.price-tax')])
-def test_money(currency_and_url, web_driver, page_url):
-    wd = web_driver
-    wd.get(page_url)
-    wd.find_element_by_css_selector("#form-currency > div > button").click()
-    wd.find_element_by_css_selector(currency_and_url[0]).click()
-    price = wd.find_element_by_css_selector(currency_and_url[2])
-    print(price.text + '==' + currency_and_url[1])
-    assert currency_and_url[1] == price.text
 
+@pytest.mark.parametrize("currency_and_url", [(MainPage.CURRENCY_EURO, MainPage.price_euro, MainPage.CORRECT_PRICE_EURO),
+                                      (MainPage.CURRENCY_POUND_STERLING, MainPage.price_pound, MainPage.CURRENCY_POUND_STERLING),
+                                      (MainPage.CURRENCY_DOLLAR, MainPage.price_dollar, MainPage.CURRENCY_DOLLAR)])
+def test_money(browser, currency_and_url):
+    price = MainPage(browser)\
+        .click(MainPage.CURRENCY_DROP_MENU)\
+        .click(currency_and_url[0])\
+        #.get_result(currency_and_url[2]) #TODO поменять локаторы на корректные
 
-$x("//span[@class='price-tax'and text()='Ex Tax: £306.25']")
+    # wd.find_element_by_css_selector("#form-currency > div > button").click()
+    # wd.find_element_by_css_selector(currency_and_url[0]).click()
+    # price = wd.find_element_by_css_selector(currency_and_url[2])
+    # assert price == currency_and_url[1]
+

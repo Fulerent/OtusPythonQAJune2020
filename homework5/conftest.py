@@ -10,35 +10,39 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture
-def page_url(request):
+def url(request):
     return request.config.getoption("--url")
 
 
 @pytest.fixture(scope="function")
-def web_driver(request):
+def browser(request, url):
     browser = request.config.getoption('--browser')
     if browser == "chrome":
         options = webdriver.ChromeOptions()
-        options.headless = True
+        options.headless = False
         options.add_argument('start-fullscreen')
-        browser = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome(chrome_options=options)
 
     elif browser == "firefox":
         options = webdriver.FirefoxOptions()
         options.headless = True
         options.add_argument('start-fullscreen')
-        browser = webdriver.Firefox(firefox_options=options)
+        driver = webdriver.Firefox(firefox_options=options)
     else:
         raise Exception("Такой браузер не поддерижвается")
 
-    yield browser
-    browser.quit()
+    # yield browser
+    # browser.quit()
+    driver.implicitly_wait(3)
+    driver.maximize_window()
 
+    request.addfinalizer(driver.quit)
+    def open(path=""):
+        return driver.get(url + path)
+    driver.open = open
+    driver.open()
+    return driver
 
-@pytest.fixture
-def wd(web_driver):
-    wd = web_driver
-    return wd
 
 
 
