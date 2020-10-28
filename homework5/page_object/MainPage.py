@@ -1,7 +1,5 @@
 from .BasePage import BasePage
 from selenium.webdriver.common.by import By
-import selenium
-
 
 class MainPage(BasePage):
     price_euro = '392.30€'

@@ -33,7 +33,7 @@ def browser(request, url):
 
     # yield browser
     # browser.quit()
-    driver.implicitly_wait(3)
+    driver.implicitly_wait(5)
     driver.maximize_window()
 
     request.addfinalizer(driver.quit)
