@@ -1,7 +1,6 @@
-from .BasePage import BasePage
 from selenium.webdriver.common.by import By
 from .BasePage import BasePage
-import selenium
+import allure
 
 
 class Catalog(BasePage):
@@ -23,17 +22,21 @@ class Catalog(BasePage):
     LIST_MENU = (By.CLASS_NAME, 'list-group-item')
     H2_CATEGORY_PRODUCT = (By.CSS_SELECTOR, '#content h2')
 
+    @allure.step("Кликаем по элементу")
     def click(self, locator):
         self._find_element(locator).click()
         return self
 
+    @allure.step("Получаем текст элемента")
     def get_element_text(self, locator):
         return self._find_element(locator).text
 
+    @allure.step("Вводим значения в поле по лакатору")
     def input_data(self, locator, value):
         self._input(locator, value)
         return self
 
+    @allure.step("Получаем количество элементов")
     def get_count_elements(self, locator):
         count = self._find_elements(locator)
         return len(count)

@@ -1,6 +1,4 @@
 import pytest
-import time
-import selenium
 from homework5.page_object.MainPage import MainPage
 from homework5.page_object.common.ShopCart import ShopCart
 from homework5.page_object.common.Search import Search
@@ -33,7 +31,6 @@ def test_button_cart(browser):
         .click(ShopCart.CART_BUTTON)\
         .get_element_text(ShopCart.CART_DROP_NOTIFICATION)
     assert notification == "Your shopping cart is empty!"
-
 
 
 @pytest.mark.parametrize("currency_and_url", [(MainPage.CURRENCY_EURO, MainPage.price_euro, MainPage.CORRECT_PRICE_EURO),
