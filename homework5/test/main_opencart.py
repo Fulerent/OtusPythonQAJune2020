@@ -1,7 +1,8 @@
 import pytest
 import allure
 from homework5.page_object.MainPage import MainPage
-
+from homework5.page_object.common import Search
+from homework5.page_object.common import ShopCart
 
 @allure.severity(allure.severity_level.NORMAL)
 @allure.story('Проверка основной страницы сайта.')
