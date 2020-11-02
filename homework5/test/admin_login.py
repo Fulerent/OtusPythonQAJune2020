@@ -1,6 +1,5 @@
 import pytest
 import time
-import random
 
 url_category = "/admin/index.php?route=common/login"
 user_admin = "user"

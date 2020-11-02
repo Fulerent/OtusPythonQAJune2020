@@ -1,7 +1,6 @@
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-import allure
+
 
 
 class BasePage:
@@ -29,7 +28,3 @@ class BasePage:
     def _get_element_string(self, locator, time=5):
         return WebDriverWait(self.driver, time).until(EC.presence_of_element_located(locator),
                                                       message=f"Get element by locator {locator}").text
-    #
-    # def text_in_element(self, locator, text, timeout=3):
-    #     return WebDriverWait(self.driver, timeout).until(EC.text_to_be_present_in_element(locator, text),
-    #                                                       message=f"Get text element by {locator}")

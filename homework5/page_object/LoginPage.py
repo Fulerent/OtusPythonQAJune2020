@@ -4,7 +4,6 @@ import random
 
 
 class Login(BasePage):
-
         url_login = "/index.php?route=account/login"
         name = "test" + str(random.randint(1, 1000000000))
         email = "mail" + str(random.randint(1, 1000000000)) + "@mail.ru"
@@ -33,7 +32,6 @@ class Login(BasePage):
         NEWSLETTER_CHECKBOX_YES = (By.XPATH, '//input[@name="newsletter"]')
         PRIVACY_POLICY = (By.XPATH, '//input[@name="agree"]')
         INPUT_CONTINUE = (By.XPATH, '//input[@value="Continue"]')
-
 
         def click(self, locator):
             self._find_element(locator).click()

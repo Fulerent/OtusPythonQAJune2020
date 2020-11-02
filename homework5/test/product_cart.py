@@ -1,8 +1,12 @@
 import pytest
-import time
+import allure
 from homework5.page_object.ProductCartPage import ProductCartPage
 
 
+@allure.severity(allure.severity_level.NORMAL)
+@allure.story("Проверка страницу 'карта товара'")
+@allure.feature("Проверка корректного перехода на страницу с картой товара")
+@allure.title("Переходим в карту товара 'Макбук' и проверяем заголовок страницы")
 def test_h1(browser):
     browser.open(ProductCartPage.url_product)
     text = ProductCartPage(browser) \
@@ -10,6 +14,12 @@ def test_h1(browser):
     assert text == "MacBook"
 
 
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.story("Проверка страницу 'карта товара'")
+@allure.feature("Проверка добавления товара в списокк желаний")
+@allure.title("Открываем карту товара, "
+              "нажимаем кнопку 'Добавить в список желаемого' и проверям, "
+              "что спсиок увеличился на 1")
 def test_wish_list(browser):
     browser.open(ProductCartPage.url_product)
     text = ProductCartPage(browser)\
@@ -18,40 +28,52 @@ def test_wish_list(browser):
     assert ProductCartPage.wish_list_assert_text in text
 
 
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.story("Проверка страницу 'карта товара'")
+@allure.feature("Проверка добавления товара в корзину")
+@allure.title("Открываем карту товара, "
+              "сохраняем цену товара"
+              "нажимаем кнопку 'Добавить в корзину' и проверям, "
+              "что в корзине 1 товар с ценной товара")
 def test_add_cart(browser):
     browser.open(ProductCartPage.url_product)
     price_product = ProductCartPage(browser).save_price()
     price_shop_cart = ProductCartPage(browser)\
-        .click(ProductCartPage.BUTTON_ADD_TO_CART)\
-        .get_element_text(ProductCartPage.SHOPPING_CART)
+        .add_product_cart(ProductCartPage.SHOPPING_CART)
 
     assert price_shop_cart == "1 item(s) - " + price_product
 
 
+@allure.severity(allure.severity_level.NORMAL)
+@allure.story("Проверка страницу 'карта товара'")
+@allure.feature("Проверка добавления указаного кол-ва товаров в корзину")
+@allure.title("Открываем карту товара, "
+              "вписываем количество товара"
+              "нажимаем кнопку 'Добавить в корзину' и проверям, "
+              "что в корзине указанное кол-во товаров")
 @pytest.mark.parametrize("count", (2, 3, 4, 10))
 def test_add_cart_many(browser, count):
     browser.open(ProductCartPage.url_product)
-    count_items = ProductCartPage(browser)\
-        .input_data(ProductCartPage.AMOUNT_OF_GOODS, count)\
-        .click(ProductCartPage.BUTTON_ADD_TO_CART)\
-        .get_element_text(ProductCartPage.SHOPPING_CART)
+    ProductCartPage(browser).input_data(ProductCartPage.AMOUNT_OF_GOODS, count)
+    count_items = ProductCartPage(browser) \
+        .add_product_cart(ProductCartPage.SHOPPING_CART)
+
     assert f"{count} item(s) -" in count_items
 
 
-# @pytest.mark.parametrize("url", ('#content > div > div.col-sm-4 > div.rating > p > a:nth-child(6)',
-#                                  '#content > div > div.col-sm-4 > div.rating > p > a:nth-child(7)',
-#                                  '#content > div > div.col-sm-8 > ul.nav.nav-tabs > li:nth-child(3) > a'))
-# def test_error_add_comment(url, web_driver, page_url):
-#     wd = web_driver
-#     wd.get(page_url + url_category)
-#     wd.find_element_by_css_selector(url).click()
-#     wd.find_element_by_id("input-name").send_keys("Kirill")
-#     wd.find_element_by_id("input-review").send_keys("Текст длиной более 25 символоа!!!!!!!!!!!!!")
-#     wd.find_element_by_id("button-review").click()
-#     time.sleep(1)
-#     error_text = wd.find_element_by_css_selector("#form-review > div.alert.alert-danger.alert-dismissible").text
-#     assert error_text == "Warning: Please select a review rating!"
-#
-#
+@allure.severity(allure.severity_level.NORMAL)
+@allure.story("Проверка страницу 'карта товара'")
+@allure.feature("Проверка отправки комментария при переходе с разных мест страницы 'карта товара' с разными оценками")
+@allure.title("Открываем карту товара, "
+              "переходим на добавления комментария к товару,"
+              "добавлениям данные и устанавливаем оценку и проверям,"
+              "что комментарий успешно отправлен на одорбрение")
+@pytest.mark.parametrize("locator", (ProductCartPage.BUTTON_REVIEWS, ProductCartPage.BUTTON_WRITE_REVIEWS,
+                                     ProductCartPage.BUTTON_TAB_REVIEWS))
+@pytest.mark.parametrize("value_rating", (1, 2, 3, 4, 5))
+def test_error_add_comment(browser, locator, value_rating):
+    browser.open(ProductCartPage.url_product)
+    alert = ProductCartPage(browser).add_comment(locator, value_rating)
 
+    assert alert == "Thank you for your review. It has been submitted to the webmaster for approval."
 
