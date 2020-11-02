@@ -1,8 +1,6 @@
 import pytest
 import allure
 from homework5.page_object.MainPage import MainPage
-from homework5.page_object.common.ShopCart import ShopCart
-from homework5.page_object.common.Search import Search
 
 
 @allure.severity(allure.severity_level.NORMAL)
